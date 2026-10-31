@@ -1,0 +1,17 @@
+{
+  "name": "advisory-council",
+  "owner": {
+    "name": "coeurdelion-me"
+  },
+  "metadata": {
+    "description": "Convene a panel of different AI models to review a proposal, design or decision in two rounds (questions, then verdict), with every raw output filed. Provider-agnostic: OpenRouter by default, any OpenAI-compatible API.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "advisory-council",
+      "description": "Convene a panel of different AI models to review a proposal, design or decision in two rounds (questions, then verdict), with every raw output filed. Provider-agnostic: OpenRouter by default, any OpenAI-compatible API.",
+      "source": "./"
+    }
+  ]
+}

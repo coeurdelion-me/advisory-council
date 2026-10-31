@@ -1,0 +1,10 @@
+{
+  "name": "advisory-council",
+  "description": "Convene a panel of different AI models to review a proposal, design or decision in two rounds (questions, then verdict), with every raw output filed. Provider-agnostic: OpenRouter by default, any OpenAI-compatible API.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Coeur de Lion"
+  },
+  "repository": "https://github.com/coeurdelion-me/advisory-council",
+  "license": "CC-BY-NC-4.0 AND PolyForm-Noncommercial-1.0.0"
+}

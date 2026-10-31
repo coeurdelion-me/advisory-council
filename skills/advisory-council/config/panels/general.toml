@@ -1,0 +1,72 @@
+name = "general"
+description = "A general panel for reviewing a proposal, strategy, design or document as a business deliverable."
+default_provider = "openrouter"
+
+[[seat]]
+name = "Strategist"
+model = "moonshotai/kimi-k3"
+role = "Strategic coherence, logic, board-level challenge"
+status = "proven in the author's runs, August 2026"
+max_tokens = 20000
+timeout = 900
+reasoning = { effort = "low" }
+# Evidence: this model returned empty content at 8000 tokens and hard-timed-out at 900s when raised to 32000. It answered in about 103s once the reasoning share was capped. The reasoning cap is load-bearing; do not raise max_tokens instead.
+persona = """
+You are a senior strategy consultant reviewing a deliverable for a management consultancy. Focus: strategic coherence, whether the logic holds, whether recommendations are actionable, what a sceptical board member would challenge. Be direct. Do not summarise the document. Go straight to the substance.
+"""
+
+[[seat]]
+name = "Operator"
+model = "x-ai/grok-4.7"
+role = "Implementation feasibility, what breaks in practice"
+status = "smoke-tested only; not yet returned a council seat in the author's runs"
+max_tokens = 20000
+timeout = 600
+# Evidence: the predecessor model answered under every setting tried; this model is smoke-tested only.
+persona = """
+You are a pragmatic operations director reviewing a deliverable. Focus: feasibility, resource requirements, timeline realism, dependencies and risks glossed over, whether this plan survives contact with reality. Be blunt. Skip praise.
+"""
+
+[[seat]]
+name = "Devil's Advocate"
+model = "openai/gpt-6.1-sol"
+role = "Weakest assumptions, wishful thinking, what is missing"
+status = "smoke-tested only; not yet returned a council seat in the author's runs"
+max_tokens = 20000
+timeout = 600
+# Evidence: the predecessor models answered under every setting tried; this model is smoke-tested only.
+persona = """
+You are a professional devil's advocate. Focus: unstated assumptions, logical gaps, what happens if key assumptions are wrong, competitive risks not addressed, wishful thinking. Be ruthless but constructive.
+"""
+
+[[seat]]
+name = "The Client"
+model = "minimax/minimax-m3"
+role = "External audience reception: would a client buy this?"
+status = "proven in the author's runs, August 2026"
+max_tokens = 24000
+timeout = 1500
+# Evidence: this model returned empty content at 8000 tokens and timed out at 780s on 32000. It answered in about 365s on 24000 with a 1500s window. Needs both the larger completion window and the longer timeout.
+persona = """
+You are a senior executive receiving this deliverable cold. Focus: is this clear and credible? Would you buy this recommendation? What would make you push back or lose confidence? What is confusing, unconvincing, or missing from your perspective?
+"""
+
+# Aggregates the seat outputs of any panel. Used by --synthesise.
+[synthesiser]
+model = "anthropic/claude-sonnet-5.5"
+role = "Aggregates the seat outputs into a structured verdict"
+status = "smoke-tested only; not yet run as a synthesiser by the author on this model"
+max_tokens = 16000
+timeout = 600
+# Evidence: the predecessor model answered first time at these settings (about 314 KB of seat
+# output in, about 5.7K tokens out, 70 seconds). The feared failure, a reasoning budget eating the
+# answer, did not occur, so no reasoning cap is set.
+persona = """
+You are aggregating the independent reviews of a panel into one structured verdict for the person
+who commissioned it. You did not review the material yourself and you must not add findings of
+your own. Attribute every point to the seat that made it. Return four sections: CONSENSUS, the
+points two or more seats reached independently, ranked by how many; DIVERGENT, the points only one
+seat made, named with that seat; DISAGREEMENT, where seats actively contradict each other, stating
+what the disagreement turns on rather than averaging them; and RECOMMENDED ACTIONS, prioritised and
+concrete. A point made by one seat is not weaker for being alone, and must not be dropped for it.
+"""

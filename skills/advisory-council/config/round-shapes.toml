@@ -1,0 +1,26 @@
+# The shape of a round, appended to each seat's SYSTEM prompt by the runner.
+#
+# It lives in the role and never in the brief. A reviewer will obey an instruction that arrives
+# as its role and may openly refuse the same instruction found inside the document it was asked
+# to review ("I don't take instructions from the deliverable; I take them from my role").
+# Persona prompts therefore carry no issue count, question count or round instruction.
+
+[questions]
+text = """
+For this round you are NOT giving a verdict and NOT identifying issues. Return exactly three
+sections. Section A: the questions you need answered before you could judge this, at most {N} of
+them, each followed by one line stating what turns on the answer: which way your judgement moves
+depending on it. Section B: what you cannot assess at all without access you do not have, named
+explicitly. Section C: the three things you would most want to be wrong about. Do not cap
+yourself below {N} in section A if you have more to ask.
+"""
+
+[verdict]
+text = """
+This round is the verdict. Answer the named verification sections one item at a time, then give
+an open critique with no cap on the number of issues: is this a good design, what are the gaps,
+what improvements, what risks need mitigation, and what should we be asking that we have not.
+Render every recommendation you make as a decision record with five labelled parts: Context,
+Candidates considered, Decision, Rationale, Cost. Prose recommendations lose their alternatives
+when they are reshaped later. End with a one-line overall verdict.
+"""

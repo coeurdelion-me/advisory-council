@@ -1,0 +1,42 @@
+# Providers: where a seat's model is called.
+#
+# Every provider here speaks the OpenAI-style /chat/completions format, so one client serves
+# them all. A seat in a panel file names a `model` and, optionally, a `provider`; a seat with no
+# `provider` uses `default` below.
+#
+# To use your own: copy this file next to where you run the command as `council.providers.toml`
+# (it is picked up automatically), or pass --providers PATH, or set COUNCIL_PROVIDERS.
+#
+# Fields
+#   base_url     the API root; /chat/completions is appended
+#   key_env      the NAME of the environment variable holding the key (never the key itself).
+#                Omit for a provider that needs none, such as a local server.
+#   body_fields  extra request fields this provider accepts. Today only "reasoning" matters: it is
+#                OpenRouter's way of capping how much of a reasoning model's budget goes on
+#                thinking. A provider not listing it never receives it.
+#   pricing      "openrouter" reads prices from the provider's public /models list, for the
+#                pre-run estimate and --max-cost. Omit and the estimate shows token counts only.
+#   headers      extra HTTP headers, optional. Never put a key or token in one: keys come from
+#                the environment variable named by key_env, so they cannot be committed by accident
+
+default = "openrouter"
+
+[providers.openrouter]
+base_url = "https://openrouter.ai/api/v1"
+key_env = "OPENROUTER_API_KEY"
+body_fields = ["reasoning"]
+pricing = "openrouter"
+
+[providers.openai]
+base_url = "https://api.openai.com/v1"
+key_env = "OPENAI_API_KEY"
+
+# A LiteLLM proxy, which fronts most other providers (Anthropic, Gemini, Bedrock, Azure).
+# Seat models then use the proxy's own model names.
+[providers.litellm]
+base_url = "http://localhost:4000/v1"
+key_env = "LITELLM_API_KEY"
+
+# A local Ollama server. No key. Seat models are Ollama tags such as "llama3.2:3b".
+[providers.ollama]
+base_url = "http://localhost:11434/v1"
